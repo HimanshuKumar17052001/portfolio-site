@@ -1,6 +1,23 @@
+import { useEffect, useState } from "react";
+
 export default function AIPortfolio() {
   // Himanshu Kumar's AI Engineer Portfolio - Apple-inspired design with real content
   // Following Apple's principles: minimalism, product focus, clear hierarchy, smooth motion
+
+  const [isDark, setIsDark] = useState(false);
+  useEffect(() => {
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('theme') : null;
+    const prefersDark = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const enableDark = saved ? saved === 'dark' : prefersDark;
+    document.documentElement.classList.toggle('dark', enableDark);
+    setIsDark(enableDark);
+  }, []);
+  const toggleTheme = () => {
+    const next = !isDark;
+    setIsDark(next);
+    document.documentElement.classList.toggle('dark', next);
+    localStorage.setItem('theme', next ? 'dark' : 'light');
+  };
 
   const sections = [
     { id: "about", label: "About" },
@@ -41,23 +58,23 @@ export default function AIPortfolio() {
   ];
 
   return (
-    <div className="min-h-[100svh] text-apple-gray-900 antialiased font-sans bg-white">
+    <div className="min-h-[100svh] antialiased font-sans bg-white text-apple-gray-900 dark:bg-apple-gray-900 dark:text-white">
       {/* Apple-style navigation */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200/50">
-        <Nav sections={sections} />
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 dark:bg-apple-gray-900/70 dark:border-apple-gray-800">
+        <Nav sections={sections} isDark={isDark} onToggleTheme={toggleTheme} />
       </header>
 
       <main className="relative">
         {/* Hero Section - Apple-style large typography and spacing */}
         <section className="pt-20 pb-24 px-6 max-w-6xl mx-auto text-center">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold tracking-tight text-apple-gray-900 mb-6 animate-fade-up">
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold tracking-tight text-apple-gray-900 dark:text-white mb-6 animate-fade-up">
               Himanshu Kumar
             </h1>
-            <p className="text-2xl sm:text-3xl text-apple-gray-600 mb-8 leading-relaxed max-w-3xl mx-auto animate-slide-up">
+            <p className="text-2xl sm:text-3xl text-apple-gray-600 dark:text-apple-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto animate-slide-up">
               AI Engineer & Data Scientist
             </p>
-            <p className="text-lg text-apple-gray-500 mb-12 max-w-2xl mx-auto animate-slide-up">
+            <p className="text-lg text-apple-gray-500 dark:text-apple-gray-300 mb-12 max-w-2xl mx-auto animate-slide-up">
               M.Sc. Economics with AI specialization from IIT Kharagpur. 
               Building AI agents and LLM solutions for real-world problems.
             </p>
@@ -70,7 +87,7 @@ export default function AIPortfolio() {
               </a>
               <a 
                 href="#skills" 
-                className="inline-flex items-center justify-center border border-apple-gray-300 text-apple-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:bg-apple-gray-50 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-apple-gray-500/30 btn-apple"
+                className="inline-flex items-center justify-center border border-apple-gray-300 text-apple-gray-700 dark:text-white dark:border-apple-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:bg-apple-gray-50 dark:hover:bg-apple-gray-800 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-apple-gray-500/30 btn-apple"
               >
                 See Skills
               </a>
@@ -82,14 +99,14 @@ export default function AIPortfolio() {
         <section id="about" className="py-20 px-6 max-w-6xl mx-auto scroll-mt-20">
           <div className="text-center mb-16">
             <p className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3">About</p>
-            <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 mb-6">Who I Am</h2>
+            <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6">Who I Am</h2>
           </div>
           <div className="max-w-4xl mx-auto text-center">
-            <p className="text-xl text-apple-gray-600 leading-relaxed mb-6">
+            <p className="text-xl text-apple-gray-600 dark:text-apple-gray-300 leading-relaxed mb-6">
               Hello, I'm Himanshu Kumar, a graduate of IIT Kharagpur with an M.Sc. (5Y) in Economics 
               with Micro Specialization in Artificial Intelligence and Applications.
             </p>
-            <p className="text-lg text-apple-gray-600 leading-relaxed">
+            <p className="text-lg text-apple-gray-600 dark:text-apple-gray-300 leading-relaxed">
               I am passionate about Data Science, Analytics, and AI/ML. Eager to apply academic knowledge 
               and project experience to solve real-world problems with innovative AI solutions.
             </p>
@@ -100,12 +117,12 @@ export default function AIPortfolio() {
         <section id="skills" className="py-20 px-6 max-w-6xl mx-auto scroll-mt-20">
           <div className="text-center mb-16">
             <p className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3">Skills</p>
-            <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 mb-6">Core Competencies</h2>
+            <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6">Core Competencies</h2>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
             {skills.map((skill) => (
-              <div key={skill} className="bg-apple-gray-50 rounded-2xl p-6 text-center hover:bg-apple-gray-100 transition-all duration-300 hover:shadow-apple card-apple">
-                <span className="text-apple-gray-900 font-medium">{skill}</span>
+              <div key={skill} className="bg-apple-gray-50 dark:bg-apple-gray-800 rounded-2xl p-6 text-center hover:bg-apple-gray-100 dark:hover:bg-apple-gray-700 transition-all duration-300 hover:shadow-apple card-apple">
+                <span className="text-apple-gray-900 dark:text-white font-medium">{skill}</span>
               </div>
             ))}
           </div>
@@ -115,7 +132,7 @@ export default function AIPortfolio() {
         <section id="projects" className="py-20 px-6 max-w-6xl mx-auto scroll-mt-20">
           <div className="text-center mb-16">
             <p className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3">Projects</p>
-            <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 mb-6">Featured Work</h2>
+            <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6">Featured Work</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {projects.map((project) => (
@@ -128,7 +145,7 @@ export default function AIPortfolio() {
         <section id="experience" className="py-20 px-6 max-w-6xl mx-auto scroll-mt-20">
           <div className="text-center mb-16">
             <p className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3">Experience</p>
-            <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 mb-6">Professional Journey</h2>
+            <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6">Professional Journey</h2>
           </div>
           <Timeline />
         </section>
@@ -137,7 +154,7 @@ export default function AIPortfolio() {
         <section id="contact" className="py-20 px-6 max-w-6xl mx-auto scroll-mt-20">
           <div className="text-center mb-16">
             <p className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3">Contact</p>
-            <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 mb-6">Let's Connect</h2>
+            <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6">Let's Connect</h2>
           </div>
           <div className="max-w-2xl mx-auto text-center">
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -148,7 +165,7 @@ export default function AIPortfolio() {
                 Email Me
               </a>
               <a
-                className="inline-flex items-center justify-center border border-apple-gray-300 text-apple-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:bg-apple-gray-50 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-apple-gray-500/30 btn-apple"
+                className="inline-flex items-center justify-center border border-apple-gray-300 text-apple-gray-700 dark:text-white dark:border-apple-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:bg-apple-gray-50 dark:hover:bg-apple-gray-800 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-apple-gray-500/30 btn-apple"
                 href="/resume.pdf"
                 download
               >
@@ -170,27 +187,27 @@ export default function AIPortfolio() {
         </section>
       </main>
 
-      <footer className="py-16 px-6 text-center border-t border-apple-gray-200">
+      <footer className="py-16 px-6 text-center border-t border-apple-gray-200 dark:border-apple-gray-800">
         <div className="max-w-6xl mx-auto">
-          <p className="text-apple-gray-500">© {new Date().getFullYear()} Himanshu Kumar. Built with care and no nonsense.</p>
+          <p className="text-apple-gray-500 dark:text-apple-gray-400">© {new Date().getFullYear()} Himanshu Kumar. Built with care and no nonsense.</p>
         </div>
       </footer>
     </div>
   );
 }
 
-function Nav({ sections }) {
+function Nav({ sections, isDark, onToggleTheme }) {
   return (
     <nav className="max-w-6xl mx-auto flex items-center justify-between py-4">
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-full bg-apple-blue" />
-        <span className="text-xl font-semibold text-apple-gray-900">Himanshu Kumar</span>
+        <span className="text-xl font-semibold text-apple-gray-900 dark:text-white">Himanshu Kumar</span>
       </div>
       <ul className="hidden md:flex items-center gap-8">
         {sections.map((section) => (
           <li key={section.id}>
             <a
-              className="text-apple-gray-600 hover:text-apple-gray-900 transition-colors duration-200 font-medium"
+              className="text-apple-gray-600 dark:text-apple-gray-300 hover:text-apple-gray-900 dark:hover:text-white transition-colors duration-200 font-medium"
               href={`#${section.id}`}
             >
               {section.label}
@@ -198,12 +215,21 @@ function Nav({ sections }) {
           </li>
         ))}
       </ul>
-      <a
-        href="#contact"
-        className="inline-flex items-center justify-center bg-apple-blue text-white px-6 py-2 rounded-full font-medium hover:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-apple-blue/30 btn-apple"
-      >
-        Hire Me
-      </a>
+      <div className="flex items-center gap-3">
+        <button
+          onClick={onToggleTheme}
+          aria-label="Toggle dark mode"
+          className="inline-flex items-center justify-center rounded-full border border-apple-gray-300 dark:border-apple-gray-700 px-3 py-2 text-sm text-apple-gray-700 dark:text-white hover:bg-apple-gray-50 dark:hover:bg-apple-gray-800 transition"
+        >
+          {isDark ? 'Light' : 'Dark'} mode
+        </button>
+        <a
+          href="#contact"
+          className="inline-flex items-center justify-center bg-apple-blue text-white px-6 py-2 rounded-full font-medium hover:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-apple-blue/30 btn-apple"
+        >
+          Hire Me
+        </a>
+      </div>
     </nav>
   );
 }
@@ -211,15 +237,15 @@ function Nav({ sections }) {
 function ProjectCard({ title, blurb, meta, link, highlight }) {
   return (
     <div className="group animate-scale-in">
-      <div className="bg-white rounded-3xl p-8 border border-apple-gray-200 hover:shadow-apple-large transition-all duration-500 hover:-translate-y-2 card-apple">
+      <div className="bg-white dark:bg-apple-gray-800 rounded-3xl p-8 border border-apple-gray-200 dark:border-apple-gray-700 hover:shadow-apple-large transition-all duration-500 hover:-translate-y-2 card-apple">
         {highlight && (
           <span className="inline-block bg-apple-blue/10 text-apple-blue text-xs font-medium px-3 py-1 rounded-full mb-4">
             {highlight}
           </span>
         )}
-        <h3 className="text-2xl font-bold text-apple-gray-900 mb-4">{title}</h3>
-        <p className="text-apple-gray-600 text-lg leading-relaxed mb-4">{blurb}</p>
-        <p className="text-apple-gray-500 text-sm mb-6">{meta}</p>
+        <h3 className="text-2xl font-bold text-apple-gray-900 dark:text-white mb-4">{title}</h3>
+        <p className="text-apple-gray-600 dark:text-apple-gray-300 text-lg leading-relaxed mb-4">{blurb}</p>
+        <p className="text-apple-gray-500 dark:text-apple-gray-400 text-sm mb-6">{meta}</p>
         <div className="inline-flex items-center gap-2 text-apple-blue font-medium group-hover:gap-3 transition-all duration-300">
           <span>Learn More</span>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -291,18 +317,18 @@ function Timeline() {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {items.map((item, i) => (
-        <div key={i} className="bg-white rounded-3xl p-8 border border-apple-gray-200 hover:shadow-apple-hover transition-all duration-300 card-apple">
+        <div key={i} className="bg-white dark:bg-apple-gray-800 rounded-3xl p-8 border border-apple-gray-200 dark:border-apple-gray-700 hover:shadow-apple-hover transition-all duration-300 card-apple">
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
             <div className="flex-1">
-              <h3 className="text-2xl font-bold text-apple-gray-900 mb-2">{item.role} · {item.org}</h3>
+              <h3 className="text-2xl font-bold text-apple-gray-900 dark:text-white mb-2">{item.role} · {item.org}</h3>
               <p className="text-apple-blue font-medium mb-1">{item.time}</p>
-              <p className="text-apple-gray-500 text-sm">{item.location}</p>
+              <p className="text-apple-gray-500 dark:text-apple-gray-400 text-sm">{item.location}</p>
             </div>
             <ul className="flex-1 space-y-3">
               {item.points.map((point, j) => (
                 <li key={j} className="flex items-start gap-3">
                   <div className="w-2 h-2 bg-apple-blue rounded-full mt-2 flex-shrink-0" />
-                  <span className="text-apple-gray-600 leading-relaxed">{point}</span>
+                  <span className="text-apple-gray-600 dark:text-apple-gray-300 leading-relaxed">{point}</span>
                 </li>
               ))}
             </ul>

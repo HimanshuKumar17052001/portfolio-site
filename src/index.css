@@ -17,6 +17,11 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 
+/* Dark mode base colors */
+.dark body {
+  @apply bg-apple-gray-900 text-white;
+}
+
 /* Apple-style focus states */
 .focus-ring {
   @apply focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30;
