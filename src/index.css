@@ -1,13 +1,42 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Apple-style global polish */
+html {
+  scroll-behavior: smooth;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+html, body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Apple-style focus states */
+.focus-ring {
+  @apply focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30;
+}
+
+/* Apple-style button transitions */
+.btn-apple {
+  @apply transition-all duration-300 ease-out;
+}
+
+/* Apple-style card hover effects */
+.card-apple {
+  @apply transition-all duration-500 ease-out hover:shadow-apple-hover hover:-translate-y-1;
+}
+
+/* Apple-style text selection */
+::selection {
+  @apply bg-blue-500/20 text-blue-900;
+}
+
+::-moz-selection {
+  @apply bg-blue-500/20 text-blue-900;
 }
