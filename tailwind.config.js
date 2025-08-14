@@ -55,17 +55,60 @@ module.exports = {
         'slide-up': {
           '0%': { opacity: '0', transform: 'translateY(40px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'float': {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-20px)' },
+        },
+        'float-delayed': {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-15px)' },
+        },
+        'gradient-x': {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+        'bounce-subtle': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-5px)' },
+        },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'fade-in-delayed': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'fade-in-delayed-2': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'fade-in-delayed-3': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
         }
       },
       animation: {
         'fade-up': 'fade-up 0.8s ease-out both',
         'scale-in': 'scale-in 0.6s ease-out both',
         'slide-up': 'slide-up 1s ease-out both',
+        'float': 'float 6s ease-in-out infinite',
+        'float-delayed': 'float-delayed 8s ease-in-out infinite 2s',
+        'gradient-x': 'gradient-x 3s ease infinite',
+        'bounce-subtle': 'bounce-subtle 2s ease-in-out infinite',
+        'fade-in': 'fade-in 0.8s ease-out both',
+        'fade-in-delayed': 'fade-in 0.8s ease-out 0.2s both',
+        'fade-in-delayed-2': 'fade-in 0.8s ease-out 0.4s both',
+        'fade-in-delayed-3': 'fade-in 0.8s ease-out 0.6s both',
       },
       spacing: {
         '18': '4.5rem',
         '88': '22rem',
         '128': '32rem',
+      },
+      backgroundSize: {
+        '200%': '200%',
       }
     },
   },

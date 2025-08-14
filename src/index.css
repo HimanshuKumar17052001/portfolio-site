@@ -17,11 +17,6 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 
-/* Dark mode base colors */
-.dark body {
-  @apply bg-apple-gray-900 text-white;
-}
-
 /* Apple-style focus states */
 .focus-ring {
   @apply focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30;
@@ -44,4 +39,68 @@ html, body {
 
 ::-moz-selection {
   @apply bg-blue-500/20 text-blue-900;
+}
+
+/* AI-themed gradient text */
+.gradient-text {
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-x 3s ease infinite;
+}
+
+/* Enhanced hover effects */
+.hover-lift {
+  @apply transition-all duration-300 hover:scale-105 hover:-translate-y-2;
+}
+
+/* 3D Card Effects */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Floating animation for AI elements */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes float-delayed {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+/* Gradient animation */
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Subtle bounce for AI text */
+@keyframes bounce-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Dark mode base styles */
+.dark ::selection {
+  @apply bg-blue-400/20 text-blue-100;
+}
+
+.dark ::-moz-selection {
+  @apply bg-blue-400/20 text-blue-100;
 }
