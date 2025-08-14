@@ -1,17 +1,11 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 
 export default function AIPortfolio() {
   // Himanshu Kumar's AI Engineer Portfolio - Apple-inspired design with real content
-  // Enhanced with AI-themed dynamic effects, 3D transforms, parallax scrolling, and typewriter
   // Following Apple's principles: minimalism, product focus, clear hierarchy, smooth motion
+  // Enhanced with AI-themed dynamic effects and animations
 
   const [isDark, setIsDark] = useState(false);
-  const [typewriterText, setTypewriterText] = useState("");
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isTyping, setIsTyping] = useState(true);
-  
-  const containerRef = useRef(null);
-  const heroRef = useRef(null);
   
   useEffect(() => {
     const saved = typeof window !== 'undefined' ? localStorage.getItem('theme') : null;
@@ -19,37 +13,6 @@ export default function AIPortfolio() {
     const enableDark = saved ? saved === 'dark' : prefersDark;
     document.documentElement.classList.toggle('dark', enableDark);
     setIsDark(enableDark);
-  }, []);
-
-  // Typewriter effect
-  useEffect(() => {
-    const fullName = "Himanshu Kumar";
-    if (isTyping && currentIndex < fullName.length) {
-      const timeout = setTimeout(() => {
-        setTypewriterText(fullName.slice(0, currentIndex + 1));
-        setCurrentIndex(currentIndex + 1);
-      }, 150);
-      return () => clearTimeout(timeout);
-    } else if (currentIndex === fullName.length) {
-      setIsTyping(false);
-    }
-  }, [isTyping, currentIndex]);
-
-  // Parallax scrolling effect
-  useEffect(() => {
-    const handleScroll = () => {
-      if (heroRef.current) {
-        const scrolled = window.pageYOffset;
-        const rate = scrolled * -0.3; // Reduced rate for smoother effect
-        const opacity = Math.max(0.3, 1 - (scrolled * 0.001)); // Fade out effect
-        
-        heroRef.current.style.transform = `translateY(${rate}px)`;
-        heroRef.current.style.opacity = opacity;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const toggleTheme = () => {
@@ -98,7 +61,7 @@ export default function AIPortfolio() {
   ];
 
   return (
-    <div ref={containerRef} className="min-h-[100svh] antialiased font-sans bg-white text-apple-gray-900 dark:bg-apple-gray-900 dark:text-white overflow-x-hidden">
+    <div className="min-h-[100svh] antialiased font-sans bg-white text-apple-gray-900 dark:bg-apple-gray-900 dark:text-white overflow-x-hidden">
       {/* AI Particle Background */}
       <div className="fixed inset-0 -z-10">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-apple-gray-900 dark:via-apple-gray-800 dark:to-apple-gray-900" />
@@ -124,20 +87,18 @@ export default function AIPortfolio() {
       </header>
 
       <main className="relative">
-        {/* Hero Section - AI-themed with 3D effects, parallax, and typewriter */}
-        <section className="pt-20 pb-24 px-6 max-w-6xl mx-auto text-center relative overflow-hidden">
-          {/* Parallax Background Elements */}
-          <div ref={heroRef} className="absolute inset-0 pointer-events-none parallax-element">
+        {/* Hero Section - AI-themed with dynamic effects */}
+        <section className="pt-20 pb-24 px-6 max-w-6xl mx-auto text-center relative">
+          {/* Floating AI Elements */}
+          <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-blue-400/20 to-purple-500/20 rounded-full blur-3xl animate-float" />
             <div className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-green-400/20 to-blue-500/20 rounded-full blur-2xl animate-float-delayed" />
-            <div className="absolute bottom-20 left-1/4 w-20 h-20 bg-gradient-to-r from-purple-400/20 to-pink-500/20 rounded-full blur-xl animate-float" style={{ animationDelay: '1s' }} />
           </div>
           
           <div className="max-w-4xl mx-auto relative z-10">
             <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold tracking-tight mb-6 animate-fade-up">
               <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent animate-gradient-x">
-                {typewriterText}
-                {isTyping && <span className="typewriter-cursor">|</span>}
+                Himanshu Kumar
               </span>
             </h1>
             <p className="text-2xl sm:text-3xl text-apple-gray-600 dark:text-apple-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto animate-slide-up">
@@ -150,7 +111,7 @@ export default function AIPortfolio() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a 
                 href="#projects" 
-                className="group inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/30 btn-apple transform hover:scale-105 hover:shadow-2xl card-3d"
+                className="group inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/30 btn-apple transform hover:scale-105 hover:shadow-2xl"
               >
                 <span className="mr-2">View Projects</span>
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -159,7 +120,7 @@ export default function AIPortfolio() {
               </a>
               <a 
                 href="#skills" 
-                className="inline-flex items-center justify-center border border-apple-gray-300 text-apple-gray-700 dark:text-white dark:border-apple-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:bg-apple-gray-50 dark:hover:bg-apple-gray-800 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-apple-gray-500/30 btn-apple hover:scale-105 card-3d"
+                className="inline-flex items-center justify-center border border-apple-gray-300 text-apple-gray-700 dark:text-white dark:border-apple-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:bg-apple-gray-50 dark:hover:bg-apple-gray-800 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-apple-gray-500/30 btn-apple hover:scale-105"
               >
                 See Skills
               </a>
@@ -191,18 +152,11 @@ export default function AIPortfolio() {
             <p className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3">Skills</p>
             <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6">Core Competencies</h2>
           </div>
-          
-          {/* Interactive Neural Network Visualization */}
-          <div className="mb-12">
-            <NeuralNetwork skills={skills} />
-          </div>
-          
-          {/* Traditional Skills Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
             {skills.map((skill, index) => (
               <div 
                 key={skill} 
-                className="group bg-apple-gray-50 dark:bg-apple-gray-800 rounded-2xl p-6 text-center hover:bg-apple-gray-100 dark:hover:bg-apple-gray-700 transition-all duration-300 hover:shadow-apple card-apple transform hover:scale-105 hover:-translate-y-2 card-3d"
+                className="group bg-apple-gray-50 dark:bg-apple-gray-800 rounded-2xl p-6 text-center hover:bg-apple-gray-100 dark:hover:bg-apple-gray-700 transition-all duration-300 hover:shadow-apple card-apple transform hover:scale-105 hover:-translate-y-2"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <span className="text-apple-gray-900 dark:text-white font-medium group-hover:text-apple-blue transition-colors">
@@ -221,7 +175,7 @@ export default function AIPortfolio() {
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {projects.map((project, index) => (
-              <ProjectCard3D key={project.title} {...project} index={index} />
+              <ProjectCard key={project.title} {...project} index={index} />
             ))}
           </div>
         </section>
@@ -232,7 +186,7 @@ export default function AIPortfolio() {
             <p className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3">Experience</p>
             <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6">Professional Journey</h2>
           </div>
-          <Timeline3D />
+          <Timeline />
         </section>
 
         {/* Contact Section */}
@@ -244,13 +198,13 @@ export default function AIPortfolio() {
           <div className="max-w-2xl mx-auto text-center">
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a
-                className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-apple-blue/30 btn-apple transform hover:scale-105 card-3d"
+                className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-apple-blue/30 btn-apple transform hover:scale-105"
                 href="mailto:himanshu.kumar0012@gmail.com"
               >
                 Email Me
               </a>
               <a
-                className="inline-flex items-center justify-center border border-apple-gray-300 text-apple-gray-700 dark:text-white dark:border-apple-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:bg-apple-gray-50 dark:hover:bg-apple-gray-800 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-apple-gray-500/30 btn-apple hover:scale-105 card-3d"
+                className="inline-flex items-center justify-center border border-apple-gray-300 text-apple-gray-700 dark:text-white dark:border-apple-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:bg-apple-gray-50 dark:hover:bg-apple-gray-800 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-apple-gray-500/30 btn-apple hover:scale-105"
                 href="/resume.pdf"
                 download
               >
@@ -281,70 +235,6 @@ export default function AIPortfolio() {
   );
 }
 
-// Neural Network Visualization Component
-function NeuralNetwork({ skills }) {
-  const layers = [
-    skills.slice(0, 6),    // Input layer
-    skills.slice(6, 12),   // Hidden layer 1
-    skills.slice(12, 18),  // Hidden layer 2
-    skills.slice(18)       // Output layer
-  ];
-
-  return (
-    <div className="relative w-full max-w-4xl mx-auto h-64 mb-12">
-      {/* Neural Network Connections */}
-      <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
-        {layers.map((layer, layerIndex) => {
-          if (layerIndex === layers.length - 1) return null;
-          const nextLayer = layers[layerIndex + 1];
-          return layer.map((_, nodeIndex) => 
-            nextLayer.map((_, nextNodeIndex) => (
-              <line
-                key={`${layerIndex}-${nodeIndex}-${nextNodeIndex}`}
-                x1={`${(layerIndex * 25) + 12.5}%`}
-                y1={`${(nodeIndex * 100 / (layer.length - 1)) + 12.5}%`}
-                x2={`${((layerIndex + 1) * 25) + 12.5}%`}
-                y2={`${(nextNodeIndex * 100 / (nextLayer.length - 1)) + 12.5}%`}
-                stroke="url(#gradient)"
-                strokeWidth="1"
-                opacity="0.3"
-                className="animate-pulse"
-              />
-            ))
-          );
-        })}
-        <defs>
-          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#3b82f6" />
-            <stop offset="100%" stopColor="#8b5cf6" />
-          </linearGradient>
-        </defs>
-      </svg>
-
-      {/* Neural Network Nodes */}
-      {layers.map((layer, layerIndex) => (
-        <div key={layerIndex} className="absolute top-0 h-full" style={{ left: `${layerIndex * 25}%`, width: '25%' }}>
-          {layer.map((skill, nodeIndex) => (
-            <div
-              key={skill}
-              className="absolute w-4 h-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full border-2 border-white dark:border-apple-gray-800 shadow-lg animate-pulse cursor-pointer group hover:scale-150 hover:z-10 transition-all duration-300"
-              style={{ 
-                top: `${(nodeIndex * 100 / (layer.length - 1))}%`,
-                left: '50%',
-                transform: 'translate(-50%, -50%)'
-              }}
-            >
-              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white dark:bg-apple-gray-800 px-2 py-1 rounded text-xs text-apple-gray-900 dark:text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
-                {skill}
-              </div>
-            </div>
-          ))}
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function Nav({ sections, isDark, onToggleTheme }) {
   return (
     <nav className="max-w-6xl mx-auto flex items-center justify-between py-4">
@@ -369,13 +259,13 @@ function Nav({ sections, isDark, onToggleTheme }) {
         <button
           onClick={onToggleTheme}
           aria-label="Toggle dark mode"
-          className="inline-flex items-center justify-center rounded-full border border-apple-gray-300 dark:border-apple-gray-700 px-3 py-2 text-sm text-apple-gray-700 dark:text-white hover:bg-apple-gray-50 dark:hover:bg-apple-gray-800 transition-all duration-300 hover:scale-105 card-3d"
+          className="inline-flex items-center justify-center rounded-full border border-apple-gray-300 dark:border-apple-gray-700 px-3 py-2 text-sm text-apple-gray-700 dark:text-white hover:bg-apple-gray-50 dark:hover:bg-apple-gray-800 transition-all duration-300 hover:scale-105"
         >
           {isDark ? '☀️' : '🌙'}
         </button>
         <a
           href="#contact"
-          className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-apple-blue/30 btn-apple transform hover:scale-105 card-3d"
+          className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-apple-blue/30 btn-apple transform hover:scale-105"
         >
           Hire Me
         </a>
@@ -384,65 +274,39 @@ function Nav({ sections, isDark, onToggleTheme }) {
   );
 }
 
-// 3D Project Card Component
-function ProjectCard3D({ title, blurb, meta, link, highlight, index }) {
-  const [isFlipped, setIsFlipped] = useState(false);
-
+function ProjectCard({ title, blurb, meta, link, highlight, index }) {
   return (
-    <div className="group animate-scale-in card-flip-container" style={{ animationDelay: `${index * 0.2}s` }}>
-      <div 
-        className={`card-flip ${isFlipped ? 'flipped' : ''}`}
-        onClick={() => setIsFlipped(!isFlipped)}
-      >
-        {/* Front Face */}
-        <div className="card-face card-face-front bg-white dark:bg-apple-gray-800 border border-apple-gray-200 dark:border-apple-gray-700 hover:shadow-apple-large transition-all duration-500 hover:-translate-y-2 card-apple relative overflow-hidden">
-          {/* AI Glow Effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          
-          {highlight && (
-            <span className="inline-block bg-gradient-to-r from-apple-blue to-purple-500 text-white text-xs font-medium px-3 py-1 rounded-full mb-4">
-              {highlight}
-            </span>
-          )}
-          <h3 className="text-2xl font-bold text-apple-gray-900 dark:text-white mb-4 group-hover:text-apple-blue transition-colors">
-            {title}
-          </h3>
-          <p className="text-apple-gray-600 dark:text-apple-gray-300 text-lg leading-relaxed mb-4">
-            {blurb}
-          </p>
-          <p className="text-apple-gray-500 dark:text-apple-gray-400 text-sm mb-6">
-            {meta}
-          </p>
-          <div className="inline-flex items-center gap-2 text-apple-blue font-medium group-hover:gap-3 transition-all duration-300">
-            <span>Click to flip</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:translate-x-1 transition-transform">
-              <path d="M5 12h14M13 5l7 7-7 7" />
-            </svg>
-          </div>
-        </div>
-
-        {/* Back Face */}
-        <div className="card-face card-face-back bg-gradient-to-br from-blue-50 to-purple-50 dark:from-apple-gray-700 dark:to-apple-gray-800 border border-apple-gray-200 dark:border-apple-gray-700">
-          <div className="text-center h-full flex flex-col justify-center">
-            <h4 className="text-xl font-bold text-apple-gray-900 dark:text-white mb-4">Project Details</h4>
-            <p className="text-apple-gray-600 dark:text-apple-gray-300 mb-6">
-              Click again to see the front
-            </p>
-            <div className="space-y-2">
-              <div className="w-full bg-apple-gray-200 dark:bg-apple-gray-600 h-2 rounded-full overflow-hidden">
-                <div className="bg-gradient-to-r from-blue-500 to-purple-500 h-full rounded-full animate-pulse" style={{ width: '85%' }}></div>
-              </div>
-              <p className="text-sm text-apple-gray-500 dark:text-apple-gray-400">Completion: 85%</p>
-            </div>
-          </div>
+    <div className="group animate-scale-in" style={{ animationDelay: `${index * 0.2}s` }}>
+      <div className="bg-white dark:bg-apple-gray-800 rounded-3xl p-8 border border-apple-gray-200 dark:border-apple-gray-700 hover:shadow-apple-large transition-all duration-500 hover:-translate-y-2 card-apple relative overflow-hidden">
+        {/* AI Glow Effect */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        
+        {highlight && (
+          <span className="inline-block bg-gradient-to-r from-apple-blue to-purple-500 text-white text-xs font-medium px-3 py-1 rounded-full mb-4">
+            {highlight}
+          </span>
+        )}
+        <h3 className="text-2xl font-bold text-apple-gray-900 dark:text-white mb-4 group-hover:text-apple-blue transition-colors">
+          {title}
+        </h3>
+        <p className="text-apple-gray-600 dark:text-apple-gray-300 text-lg leading-relaxed mb-4">
+          {blurb}
+        </p>
+        <p className="text-apple-gray-500 dark:text-apple-gray-400 text-sm mb-6">
+          {meta}
+        </p>
+        <div className="inline-flex items-center gap-2 text-apple-blue font-medium group-hover:gap-3 transition-all duration-300">
+          <span>Learn More</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:translate-x-1 transition-transform">
+            <path d="M5 12h14M13 5l7 7-7 7" />
+          </svg>
         </div>
       </div>
     </div>
   );
 }
 
-// 3D Timeline Component
-function Timeline3D() {
+function Timeline() {
   const items = [
     {
       time: "June 2025 - Present",
@@ -502,7 +366,7 @@ function Timeline3D() {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {items.map((item, i) => (
-        <div key={i} className="bg-white dark:bg-apple-gray-800 rounded-3xl p-8 border border-apple-gray-200 dark:border-apple-gray-700 hover:shadow-apple-hover transition-all duration-300 card-apple transform hover:scale-[1.02] hover:-translate-y-1 card-3d" style={{ animationDelay: `${i * 0.1}s` }}>
+        <div key={i} className="bg-white dark:bg-apple-gray-800 rounded-3xl p-8 border border-apple-gray-200 dark:border-apple-gray-700 hover:shadow-apple-hover transition-all duration-300 card-apple transform hover:scale-[1.02] hover:-translate-y-1" style={{ animationDelay: `${i * 0.1}s` }}>
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
             <div className="flex-1">
               <h3 className="text-2xl font-bold text-apple-gray-900 dark:text-white mb-2 group-hover:text-apple-blue transition-colors">
