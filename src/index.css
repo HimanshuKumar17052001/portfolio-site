@@ -88,6 +88,43 @@ html, body {
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
 }
 
+/* Enhanced 3D Card Flip */
+.card-flip-container {
+  perspective: 1000px;
+  width: 100%;
+  height: 100%;
+}
+
+.card-flip {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.card-flip.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 1.5rem;
+  padding: 2rem;
+}
+
+.card-face-front {
+  transform: rotateY(0deg);
+}
+
+.card-face-back {
+  transform: rotateY(180deg);
+}
+
 /* Parallax Container */
 .parallax-container {
   position: relative;

@@ -19,8 +19,10 @@ export default function AIPortfolio() {
     const enableDark = saved ? saved === 'dark' : prefersDark;
     document.documentElement.classList.toggle('dark', enableDark);
     setIsDark(enableDark);
+  }, []);
 
-    // Typewriter effect
+  // Typewriter effect
+  useEffect(() => {
     const fullName = "Himanshu Kumar";
     if (isTyping && currentIndex < fullName.length) {
       const timeout = setTimeout(() => {
@@ -38,12 +40,15 @@ export default function AIPortfolio() {
     const handleScroll = () => {
       if (heroRef.current) {
         const scrolled = window.pageYOffset;
-        const rate = scrolled * -0.5;
+        const rate = scrolled * -0.3; // Reduced rate for smoother effect
+        const opacity = Math.max(0.3, 1 - (scrolled * 0.001)); // Fade out effect
+        
         heroRef.current.style.transform = `translateY(${rate}px)`;
+        heroRef.current.style.opacity = opacity;
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -186,6 +191,13 @@ export default function AIPortfolio() {
             <p className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3">Skills</p>
             <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6">Core Competencies</h2>
           </div>
+          
+          {/* Interactive Neural Network Visualization */}
+          <div className="mb-12">
+            <NeuralNetwork skills={skills} />
+          </div>
+          
+          {/* Traditional Skills Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
             {skills.map((skill, index) => (
               <div 
@@ -269,6 +281,70 @@ export default function AIPortfolio() {
   );
 }
 
+// Neural Network Visualization Component
+function NeuralNetwork({ skills }) {
+  const layers = [
+    skills.slice(0, 6),    // Input layer
+    skills.slice(6, 12),   // Hidden layer 1
+    skills.slice(12, 18),  // Hidden layer 2
+    skills.slice(18)       // Output layer
+  ];
+
+  return (
+    <div className="relative w-full max-w-4xl mx-auto h-64 mb-12">
+      {/* Neural Network Connections */}
+      <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
+        {layers.map((layer, layerIndex) => {
+          if (layerIndex === layers.length - 1) return null;
+          const nextLayer = layers[layerIndex + 1];
+          return layer.map((_, nodeIndex) => 
+            nextLayer.map((_, nextNodeIndex) => (
+              <line
+                key={`${layerIndex}-${nodeIndex}-${nextNodeIndex}`}
+                x1={`${(layerIndex * 25) + 12.5}%`}
+                y1={`${(nodeIndex * 100 / (layer.length - 1)) + 12.5}%`}
+                x2={`${((layerIndex + 1) * 25) + 12.5}%`}
+                y2={`${(nextNodeIndex * 100 / (nextLayer.length - 1)) + 12.5}%`}
+                stroke="url(#gradient)"
+                strokeWidth="1"
+                opacity="0.3"
+                className="animate-pulse"
+              />
+            ))
+          );
+        })}
+        <defs>
+          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#3b82f6" />
+            <stop offset="100%" stopColor="#8b5cf6" />
+          </linearGradient>
+        </defs>
+      </svg>
+
+      {/* Neural Network Nodes */}
+      {layers.map((layer, layerIndex) => (
+        <div key={layerIndex} className="absolute top-0 h-full" style={{ left: `${layerIndex * 25}%`, width: '25%' }}>
+          {layer.map((skill, nodeIndex) => (
+            <div
+              key={skill}
+              className="absolute w-4 h-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full border-2 border-white dark:border-apple-gray-800 shadow-lg animate-pulse cursor-pointer group hover:scale-150 hover:z-10 transition-all duration-300"
+              style={{ 
+                top: `${(nodeIndex * 100 / (layer.length - 1))}%`,
+                left: '50%',
+                transform: 'translate(-50%, -50%)'
+              }}
+            >
+              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white dark:bg-apple-gray-800 px-2 py-1 rounded text-xs text-apple-gray-900 dark:text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg">
+                {skill}
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function Nav({ sections, isDark, onToggleTheme }) {
   return (
     <nav className="max-w-6xl mx-auto flex items-center justify-between py-4">
@@ -313,15 +389,13 @@ function ProjectCard3D({ title, blurb, meta, link, highlight, index }) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   return (
-    <div className="group animate-scale-in perspective-1000" style={{ animationDelay: `${index * 0.2}s` }}>
+    <div className="group animate-scale-in card-flip-container" style={{ animationDelay: `${index * 0.2}s` }}>
       <div 
-        className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d cursor-pointer ${
-          isFlipped ? 'rotate-y-180' : ''
-        }`}
+        className={`card-flip ${isFlipped ? 'flipped' : ''}`}
         onClick={() => setIsFlipped(!isFlipped)}
       >
         {/* Front Face */}
-        <div className="absolute inset-0 bg-white dark:bg-apple-gray-800 rounded-3xl p-8 border border-apple-gray-200 dark:border-apple-gray-700 hover:shadow-apple-large transition-all duration-500 hover:-translate-y-2 card-apple backface-hidden">
+        <div className="card-face card-face-front bg-white dark:bg-apple-gray-800 border border-apple-gray-200 dark:border-apple-gray-700 hover:shadow-apple-large transition-all duration-500 hover:-translate-y-2 card-apple relative overflow-hidden">
           {/* AI Glow Effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           
@@ -348,7 +422,7 @@ function ProjectCard3D({ title, blurb, meta, link, highlight, index }) {
         </div>
 
         {/* Back Face */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-apple-gray-700 dark:to-apple-gray-800 rounded-3xl p-8 border border-apple-gray-200 dark:border-apple-gray-700 rotate-y-180 backface-hidden">
+        <div className="card-face card-face-back bg-gradient-to-br from-blue-50 to-purple-50 dark:from-apple-gray-700 dark:to-apple-gray-800 border border-apple-gray-200 dark:border-apple-gray-700">
           <div className="text-center h-full flex flex-col justify-center">
             <h4 className="text-xl font-bold text-apple-gray-900 dark:text-white mb-4">Project Details</h4>
             <p className="text-apple-gray-600 dark:text-apple-gray-300 mb-6">
