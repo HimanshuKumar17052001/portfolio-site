@@ -1,9 +1,8 @@
 import { useEffect, useState, useRef } from "react";
-import { motion, useScroll, useTransform, useInView, useAnimation } from "framer-motion";
 
 export default function AIPortfolio() {
   // Himanshu Kumar's AI Engineer Portfolio - Apple-inspired design with real content
-  // Enhanced with AI-themed dynamic effects, 3D transforms, and advanced animations
+  // Enhanced with AI-themed dynamic effects, 3D transforms, parallax scrolling, and typewriter
   // Following Apple's principles: minimalism, product focus, clear hierarchy, smooth motion
 
   const [isDark, setIsDark] = useState(false);
@@ -12,15 +11,7 @@ export default function AIPortfolio() {
   const [isTyping, setIsTyping] = useState(true);
   
   const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"]
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
-
-  const fullName = "Himanshu Kumar";
+  const heroRef = useRef(null);
   
   useEffect(() => {
     const saved = typeof window !== 'undefined' ? localStorage.getItem('theme') : null;
@@ -30,6 +21,7 @@ export default function AIPortfolio() {
     setIsDark(enableDark);
 
     // Typewriter effect
+    const fullName = "Himanshu Kumar";
     if (isTyping && currentIndex < fullName.length) {
       const timeout = setTimeout(() => {
         setTypewriterText(fullName.slice(0, currentIndex + 1));
@@ -39,7 +31,21 @@ export default function AIPortfolio() {
     } else if (currentIndex === fullName.length) {
       setIsTyping(false);
     }
-  }, [isTyping, currentIndex, fullName]);
+  }, [isTyping, currentIndex]);
+
+  // Parallax scrolling effect
+  useEffect(() => {
+    const handleScroll = () => {
+      if (heroRef.current) {
+        const scrolled = window.pageYOffset;
+        const rate = scrolled * -0.5;
+        heroRef.current.style.transform = `translateY(${rate}px)`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const toggleTheme = () => {
     const next = !isDark;
@@ -113,69 +119,33 @@ export default function AIPortfolio() {
       </header>
 
       <main className="relative">
-        {/* Hero Section - AI-themed with 3D effects and typewriter */}
-        <motion.section 
-          className="pt-20 pb-24 px-6 max-w-6xl mx-auto text-center relative"
-          style={{ y, opacity }}
-        >
-          {/* Floating AI Elements */}
-          <div className="absolute inset-0 pointer-events-none">
-            <motion.div 
-              className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-blue-400/20 to-purple-500/20 rounded-full blur-3xl"
-              animate={{ y: [-10, 10, -10] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div 
-              className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-green-400/20 to-blue-500/20 rounded-full blur-2xl"
-              animate={{ y: [10, -15, 10] }}
-              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-            />
+        {/* Hero Section - AI-themed with 3D effects, parallax, and typewriter */}
+        <section className="pt-20 pb-24 px-6 max-w-6xl mx-auto text-center relative overflow-hidden">
+          {/* Parallax Background Elements */}
+          <div ref={heroRef} className="absolute inset-0 pointer-events-none parallax-element">
+            <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-blue-400/20 to-purple-500/20 rounded-full blur-3xl animate-float" />
+            <div className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-green-400/20 to-blue-500/20 rounded-full blur-2xl animate-float-delayed" />
+            <div className="absolute bottom-20 left-1/4 w-20 h-20 bg-gradient-to-r from-purple-400/20 to-pink-500/20 rounded-full blur-xl animate-float" style={{ animationDelay: '1s' }} />
           </div>
           
           <div className="max-w-4xl mx-auto relative z-10">
-            <motion.h1 
-              className="text-6xl sm:text-7xl lg:text-8xl font-bold tracking-tight mb-6"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, ease: "easeOut" }}
-            >
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold tracking-tight mb-6 animate-fade-up">
               <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent animate-gradient-x">
                 {typewriterText}
-                {isTyping && <span className="animate-pulse">|</span>}
+                {isTyping && <span className="typewriter-cursor">|</span>}
               </span>
-            </motion.h1>
-            <motion.p 
-              className="text-2xl sm:text-3xl text-apple-gray-600 dark:text-apple-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
-            >
-              <motion.span 
-                className="inline-block"
-                animate={{ y: [-2, 2, -2] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              >
-                AI
-              </motion.span> Engineer & Data Scientist
-            </motion.p>
-            <motion.p 
-              className="text-lg text-apple-gray-500 dark:text-apple-gray-300 mb-12 max-w-2xl mx-auto"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 1, ease: "easeOut" }}
-            >
+            </h1>
+            <p className="text-2xl sm:text-3xl text-apple-gray-600 dark:text-apple-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto animate-slide-up">
+              <span className="inline-block animate-bounce-subtle">AI</span> Engineer & Data Scientist
+            </p>
+            <p className="text-lg text-apple-gray-500 dark:text-apple-gray-300 mb-12 max-w-2xl mx-auto animate-slide-up">
               M.Sc. Economics with AI specialization from IIT Kharagpur. 
               Building AI agents and LLM solutions for real-world problems.
-            </motion.p>
-            <motion.div 
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 1.5, ease: "easeOut" }}
-            >
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a 
                 href="#projects" 
-                className="group inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/30 btn-apple transform hover:scale-105 hover:shadow-2xl"
+                className="group inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/30 btn-apple transform hover:scale-105 hover:shadow-2xl card-3d"
               >
                 <span className="mr-2">View Projects</span>
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -184,254 +154,98 @@ export default function AIPortfolio() {
               </a>
               <a 
                 href="#skills" 
-                className="inline-flex items-center justify-center border border-apple-gray-300 text-apple-gray-700 dark:text-white dark:border-apple-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:bg-apple-gray-50 dark:hover:bg-apple-gray-800 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-apple-gray-500/30 btn-apple hover:scale-105"
+                className="inline-flex items-center justify-center border border-apple-gray-300 text-apple-gray-700 dark:text-white dark:border-apple-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:bg-apple-gray-50 dark:hover:bg-apple-gray-800 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-apple-gray-500/30 btn-apple hover:scale-105 card-3d"
               >
                 See Skills
               </a>
-            </motion.div>
+            </div>
           </div>
-        </motion.section>
+        </section>
 
         {/* About Section */}
-        <motion.section 
-          id="about" 
-          className="py-20 px-6 max-w-6xl mx-auto scroll-mt-20"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
+        <section id="about" className="py-20 px-6 max-w-6xl mx-auto scroll-mt-20">
           <div className="text-center mb-16">
-            <motion.p 
-              className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3"
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              About
-            </motion.p>
-            <motion.h2 
-              className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              Who I Am
-            </motion.h2>
+            <p className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3 animate-fade-in">About</p>
+            <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6 animate-fade-in-delayed">Who I Am</h2>
           </div>
           <div className="max-w-4xl mx-auto text-center">
-            <motion.p 
-              className="text-xl text-apple-gray-600 dark:text-apple-gray-300 leading-relaxed mb-6"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
+            <p className="text-xl text-apple-gray-600 dark:text-apple-gray-300 leading-relaxed mb-6 animate-fade-in-delayed-2">
               Hello, I'm Himanshu Kumar, a graduate of IIT Kharagpur with an M.Sc. (5Y) in Economics 
               with Micro Specialization in Artificial Intelligence and Applications.
-            </motion.p>
-            <motion.p 
-              className="text-lg text-apple-gray-600 dark:text-apple-gray-300 leading-relaxed"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-            >
+            </p>
+            <p className="text-lg text-apple-gray-600 dark:text-apple-gray-300 leading-relaxed animate-fade-in-delayed-3">
               I am passionate about Data Science, Analytics, and AI/ML. Eager to apply academic knowledge 
               and project experience to solve real-world problems with innovative AI solutions.
-            </motion.p>
+            </p>
           </div>
-        </motion.section>
+        </section>
 
-        {/* Skills Section with Interactive Neural Network */}
-        <motion.section 
-          id="skills" 
-          className="py-20 px-6 max-w-6xl mx-auto scroll-mt-20"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
+        {/* Skills Section */}
+        <section id="skills" className="py-20 px-6 max-w-6xl mx-auto scroll-mt-20">
           <div className="text-center mb-16">
-            <motion.p 
-              className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3"
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              Skills
-            </motion.p>
-            <motion.h2 
-              className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              Core Competencies
-            </motion.h2>
+            <p className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3">Skills</p>
+            <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6">Core Competencies</h2>
           </div>
-          
-          {/* Interactive Neural Network Visualization */}
-          <div className="mb-12">
-            <NeuralNetwork skills={skills} />
-          </div>
-          
-          {/* Traditional Skills Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
             {skills.map((skill, index) => (
-              <motion.div 
+              <div 
                 key={skill} 
-                className="group bg-apple-gray-50 dark:bg-apple-gray-800 rounded-2xl p-6 text-center hover:bg-apple-gray-100 dark:hover:bg-apple-gray-700 transition-all duration-300 hover:shadow-apple card-apple transform hover:scale-105 hover:-translate-y-2"
-                initial={{ opacity: 0, scale: 0.8, y: 50 }}
-                whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ 
-                  scale: 1.05, 
-                  y: -8,
-                  rotateY: 5,
-                  rotateX: 5,
-                  transition: { duration: 0.3 }
-                }}
+                className="group bg-apple-gray-50 dark:bg-apple-gray-800 rounded-2xl p-6 text-center hover:bg-apple-gray-100 dark:hover:bg-apple-gray-700 transition-all duration-300 hover:shadow-apple card-apple transform hover:scale-105 hover:-translate-y-2 card-3d"
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <span className="text-apple-gray-900 dark:text-white font-medium group-hover:text-apple-blue transition-colors">
                   {skill}
                 </span>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.section>
+        </section>
 
-        {/* Projects Section with 3D Cards */}
-        <motion.section 
-          id="projects" 
-          className="py-20 px-6 max-w-6xl mx-auto scroll-mt-20"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
+        {/* Projects Section */}
+        <section id="projects" className="py-20 px-6 max-w-6xl mx-auto scroll-mt-20">
           <div className="text-center mb-16">
-            <motion.p 
-              className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3"
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              Projects
-            </motion.p>
-            <motion.h2 
-              className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              Featured Work
-            </motion.h2>
+            <p className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3">Projects</p>
+            <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6">Featured Work</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {projects.map((project, index) => (
               <ProjectCard3D key={project.title} {...project} index={index} />
             ))}
           </div>
-        </motion.section>
+        </section>
 
         {/* Experience Section */}
-        <motion.section 
-          id="experience" 
-          className="py-20 px-6 max-w-6xl mx-auto scroll-mt-20"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
+        <section id="experience" className="py-20 px-6 max-w-6xl mx-auto scroll-mt-20">
           <div className="text-center mb-16">
-            <motion.p 
-              className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3"
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              Experience
-            </motion.p>
-            <motion.h2 
-              className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              Professional Journey
-            </motion.h2>
+            <p className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3">Experience</p>
+            <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6">Professional Journey</h2>
           </div>
           <Timeline3D />
-        </motion.section>
+        </section>
 
         {/* Contact Section */}
-        <motion.section 
-          id="contact" 
-          className="py-20 px-6 max-w-6xl mx-auto scroll-mt-20"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
+        <section id="contact" className="py-20 px-6 max-w-6xl mx-auto scroll-mt-20">
           <div className="text-center mb-16">
-            <motion.p 
-              className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3"
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              Contact
-            </motion.p>
-            <motion.h2 
-              className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              Let's Connect
-            </motion.h2>
+            <p className="text-sm font-medium text-apple-blue uppercase tracking-widest mb-3">Contact</p>
+            <h2 className="text-4xl sm:text-5xl font-bold text-apple-gray-900 dark:text-white mb-6">Let's Connect</h2>
           </div>
           <div className="max-w-2xl mx-auto text-center">
-            <motion.div 
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a
-                className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-apple-blue/30 btn-apple transform hover:scale-105"
+                className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-apple-blue/30 btn-apple transform hover:scale-105 card-3d"
                 href="mailto:himanshu.kumar0012@gmail.com"
               >
                 Email Me
               </a>
               <a
-                className="inline-flex items-center justify-center border border-apple-gray-300 text-apple-gray-700 dark:text-white dark:border-apple-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:bg-apple-gray-50 dark:hover:bg-apple-gray-800 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-apple-gray-500/30 btn-apple hover:scale-105"
+                className="inline-flex items-center justify-center border border-apple-gray-300 text-apple-gray-700 dark:text-white dark:border-apple-gray-700 px-8 py-4 rounded-full text-lg font-medium hover:bg-apple-gray-50 dark:hover:bg-apple-gray-800 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-apple-gray-500/30 btn-apple hover:scale-105 card-3d"
                 href="/resume.pdf"
                 download
               >
                 Download Resume
               </a>
-            </motion.div>
-            <motion.div 
-              className="mt-8 space-y-2"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-            >
+            </div>
+            <div className="mt-8 space-y-2">
               <p className="text-apple-gray-600 dark:text-apple-gray-300">
                 <strong>LinkedIn:</strong> 
                 <a href="https://www.linkedin.com/in/himanshu-k-377095102" target="_blank" rel="noopener noreferrer" className="text-apple-blue hover:underline ml-2">
@@ -441,9 +255,9 @@ export default function AIPortfolio() {
               <p className="text-apple-gray-600 dark:text-apple-gray-300">
                 <strong>Location:</strong> Bengaluru, Karnataka, India
               </p>
-            </motion.div>
+            </div>
           </div>
-        </motion.section>
+        </section>
       </main>
 
       <footer className="py-16 px-6 text-center border-t border-apple-gray-200 dark:border-apple-gray-800">
@@ -455,72 +269,42 @@ export default function AIPortfolio() {
   );
 }
 
-// Neural Network Visualization Component
-function NeuralNetwork({ skills }) {
-  const layers = [
-    skills.slice(0, 6),    // Input layer
-    skills.slice(6, 12),   // Hidden layer 1
-    skills.slice(12, 18),  // Hidden layer 2
-    skills.slice(18)       // Output layer
-  ];
-
+function Nav({ sections, isDark, onToggleTheme }) {
   return (
-    <div className="relative w-full max-w-4xl mx-auto h-64 mb-12">
-      {/* Neural Network Connections */}
-      <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
-        {layers.map((layer, layerIndex) => {
-          if (layerIndex === layers.length - 1) return null;
-          const nextLayer = layers[layerIndex + 1];
-          return layer.map((_, nodeIndex) => 
-            nextLayer.map((_, nextNodeIndex) => (
-              <line
-                key={`${layerIndex}-${nodeIndex}-${nextNodeIndex}`}
-                x1={`${(layerIndex * 25) + 12.5}%`}
-                y1={`${(nodeIndex * 100 / (layer.length - 1)) + 12.5}%`}
-                x2={`${((layerIndex + 1) * 25) + 12.5}%`}
-                y2={`${(nextNodeIndex * 100 / (nextLayer.length - 1)) + 12.5}%`}
-                stroke="url(#gradient)"
-                strokeWidth="1"
-                opacity="0.3"
-                className="animate-pulse"
-              />
-            ))
-          );
-        })}
-        <defs>
-          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#3b82f6" />
-            <stop offset="100%" stopColor="#8b5cf6" />
-          </linearGradient>
-        </defs>
-      </svg>
-
-      {/* Neural Network Nodes */}
-      {layers.map((layer, layerIndex) => (
-        <div key={layerIndex} className="absolute top-0 h-full" style={{ left: `${layerIndex * 25}%`, width: '25%' }}>
-          {layer.map((skill, nodeIndex) => (
-            <motion.div
-              key={skill}
-              className="absolute w-4 h-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full border-2 border-white dark:border-apple-gray-800 shadow-lg"
-              style={{ 
-                top: `${(nodeIndex * 100 / (layer.length - 1))}%`,
-                left: '50%',
-                transform: 'translate(-50%, -50%)'
-              }}
-              initial={{ scale: 0, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: (layerIndex * 0.2) + (nodeIndex * 0.1) }}
-              whileHover={{ scale: 1.5, zIndex: 10 }}
+    <nav className="max-w-6xl mx-auto flex items-center justify-between py-4">
+      <div className="flex items-center gap-3">
+        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 animate-pulse" />
+        <span className="text-xl font-semibold text-apple-gray-900 dark:text-white">Himanshu Kumar</span>
+      </div>
+      <ul className="hidden md:flex items-center gap-8">
+        {sections.map((section) => (
+          <li key={section.id}>
+            <a
+              className="text-apple-gray-600 dark:text-apple-gray-300 hover:text-apple-gray-900 dark:hover:text-white transition-colors duration-200 font-medium relative group"
+              href={`#${section.id}`}
             >
-              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white dark:bg-apple-gray-800 px-2 py-1 rounded text-xs text-apple-gray-900 dark:text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-                {skill}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      ))}
-    </div>
+              {section.label}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div className="flex items-center gap-3">
+        <button
+          onClick={onToggleTheme}
+          aria-label="Toggle dark mode"
+          className="inline-flex items-center justify-center rounded-full border border-apple-gray-300 dark:border-apple-gray-700 px-3 py-2 text-sm text-apple-gray-700 dark:text-white hover:bg-apple-gray-50 dark:hover:bg-apple-gray-800 transition-all duration-300 hover:scale-105 card-3d"
+        >
+          {isDark ? '☀️' : '🌙'}
+        </button>
+        <a
+          href="#contact"
+          className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-apple-blue/30 btn-apple transform hover:scale-105 card-3d"
+        >
+          Hire Me
+        </a>
+      </div>
+    </nav>
   );
 }
 
@@ -529,18 +313,7 @@ function ProjectCard3D({ title, blurb, meta, link, highlight, index }) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   return (
-    <motion.div 
-      className="group perspective-1000"
-      initial={{ opacity: 0, y: 50, rotateY: -15 }}
-      whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8, delay: index * 0.2 }}
-      whileHover={{ 
-        rotateY: 5,
-        rotateX: 5,
-        transition: { duration: 0.3 }
-      }}
-    >
+    <div className="group animate-scale-in perspective-1000" style={{ animationDelay: `${index * 0.2}s` }}>
       <div 
         className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d cursor-pointer ${
           isFlipped ? 'rotate-y-180' : ''
@@ -549,6 +322,9 @@ function ProjectCard3D({ title, blurb, meta, link, highlight, index }) {
       >
         {/* Front Face */}
         <div className="absolute inset-0 bg-white dark:bg-apple-gray-800 rounded-3xl p-8 border border-apple-gray-200 dark:border-apple-gray-700 hover:shadow-apple-large transition-all duration-500 hover:-translate-y-2 card-apple backface-hidden">
+          {/* AI Glow Effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          
           {highlight && (
             <span className="inline-block bg-gradient-to-r from-apple-blue to-purple-500 text-white text-xs font-medium px-3 py-1 rounded-full mb-4">
               {highlight}
@@ -587,7 +363,7 @@ function ProjectCard3D({ title, blurb, meta, link, highlight, index }) {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -652,20 +428,7 @@ function Timeline3D() {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       {items.map((item, i) => (
-        <motion.div 
-          key={i} 
-          className="bg-white dark:bg-apple-gray-800 rounded-3xl p-8 border border-apple-gray-200 dark:border-apple-gray-700 hover:shadow-apple-hover transition-all duration-300 card-apple"
-          initial={{ opacity: 0, x: -50, rotateY: -15 }}
-          whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: i * 0.1 }}
-          whileHover={{ 
-            scale: 1.02, 
-            y: -8,
-            rotateY: 5,
-            transition: { duration: 0.3 }
-          }}
-        >
+        <div key={i} className="bg-white dark:bg-apple-gray-800 rounded-3xl p-8 border border-apple-gray-200 dark:border-apple-gray-700 hover:shadow-apple-hover transition-all duration-300 card-apple transform hover:scale-[1.02] hover:-translate-y-1 card-3d" style={{ animationDelay: `${i * 0.1}s` }}>
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
             <div className="flex-1">
               <h3 className="text-2xl font-bold text-apple-gray-900 dark:text-white mb-2 group-hover:text-apple-blue transition-colors">
@@ -683,55 +446,8 @@ function Timeline3D() {
               ))}
             </ul>
           </div>
-        </motion.div>
+        </div>
       ))}
     </div>
-  );
-}
-
-function Nav({ sections, isDark, onToggleTheme }) {
-  return (
-    <nav className="max-w-6xl mx-auto flex items-center justify-between py-4">
-      <div className="flex items-center gap-3">
-        <motion.div 
-          className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        />
-        <span className="text-xl font-semibold text-apple-gray-900 dark:text-white">Himanshu Kumar</span>
-      </div>
-      <ul className="hidden md:flex items-center gap-8">
-        {sections.map((section) => (
-          <li key={section.id}>
-            <a
-              className="text-apple-gray-600 dark:text-apple-gray-300 hover:text-apple-gray-900 dark:hover:text-white transition-colors duration-200 font-medium relative group"
-              href={`#${section.id}`}
-            >
-              {section.label}
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-300 group-hover:w-full"></span>
-            </a>
-          </li>
-        ))}
-      </ul>
-      <div className="flex items-center gap-3">
-        <motion.button
-          onClick={onToggleTheme}
-          aria-label="Toggle dark mode"
-          className="inline-flex items-center justify-center rounded-full border border-apple-gray-300 dark:border-apple-gray-700 px-3 py-2 text-sm text-apple-gray-700 dark:text-white hover:bg-apple-gray-50 dark:hover:bg-apple-gray-800 transition-all duration-300 hover:scale-105"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          {isDark ? '☀️' : '🌙'}
-        </motion.button>
-        <motion.a
-          href="#contact"
-          className="inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-apple-blue/30 btn-apple transform hover:scale-105"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          Hire Me
-        </motion.a>
-      </div>
-    </nav>
   );
 }

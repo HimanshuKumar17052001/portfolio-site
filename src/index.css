@@ -17,6 +17,11 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 
+/* Dark mode base colors */
+.dark body {
+  @apply bg-apple-gray-900 text-white;
+}
+
 /* Apple-style focus states */
 .focus-ring {
   @apply focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/30;
@@ -73,6 +78,36 @@ html, body {
   transform: rotateY(180deg);
 }
 
+/* 3D Card Hover Effects */
+.card-3d {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-3d:hover {
+  transform: rotateY(5deg) rotateX(5deg) translateZ(20px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* Parallax Container */
+.parallax-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.parallax-element {
+  will-change: transform;
+}
+
+/* Typewriter Effect */
+.typewriter-cursor {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
 /* Floating animation for AI elements */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
@@ -94,13 +129,4 @@ html, body {
 @keyframes bounce-subtle {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-5px); }
-}
-
-/* Dark mode base styles */
-.dark ::selection {
-  @apply bg-blue-400/20 text-blue-100;
-}
-
-.dark ::-moz-selection {
-  @apply bg-blue-400/20 text-blue-100;
 }
